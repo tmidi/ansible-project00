@@ -1,0 +1,25 @@
+---
+- name: Add docker-engine yum repo
+  template: src=docker.repo.j2 dest=/etc/yum.repos.d/docker.repo
+
+- name: Change docker repo from RHEL to CentOS
+  replace:
+    dest: /etc/yum.repos.d/docker.repo
+    regexp: 'RedHat'
+    replace: 'centos'
+  when: "{{ ansible_distribution == 'RedHat' }}"
+
+- name: Install docker-engine and pip
+  yum: name="{{item}}" state=installed
+  with_items:
+    - docker-engine
+    - python-pip
+
+- name: Ensure docker-py is installed
+  pip: name=docker-py                  
+
+- name: Start/enable docker service
+  service: name=docker enabled=yes state=started
+
+- name: Create docker user
+  user: name=docker group=docker uid=991
