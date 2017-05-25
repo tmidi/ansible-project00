@@ -13,14 +13,22 @@
         replace: 'centos'
       when: "{{ ansible_distribution == 'RedHat' }}"
 
+    - name: Install EPEL
+      yum: name="{{item}}" state=installed
+      with_items:
+        - epel-release
+
     - name: Install docker-engine and pip
       yum: name="{{item}}" state=installed
       with_items:
-        - docker-engine
+        - docker
         - python-pip
 
-    - name: Ensure docker-py is installed
-      pip: name=docker-py                  
+    - name: Ensure docker-py and docker-compose are installed
+      pip: name={{item}}
+      with_items:
+        - docker-py
+        - docker-compose                  
 
     - name: Start/enable docker service
       service: name=docker enabled=yes state=started
