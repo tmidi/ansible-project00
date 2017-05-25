@@ -1,8 +1,6 @@
 ---
 - hosts: all
   remote_user: spartan
-  become_user: spartan
-  become: yes
   sudo: yes
   roles:
     - sudo
