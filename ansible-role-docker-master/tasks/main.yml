@@ -5,9 +5,9 @@
 
 
   tasks:
-    - name: Add docker-engine yum repo
+    - name: Add docker yum repo
       template: src=/etc/semaphore/repository_1/ansible-role-docker-master/templates/docker.repo.j2 dest=/etc/yum.repos.d/docker.repo
-      sudo: yes
+      become_method: sudo
 
     - name: Change docker repo from RHEL to CentOS
       replace:
