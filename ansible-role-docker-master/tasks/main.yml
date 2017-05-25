@@ -2,8 +2,6 @@
 - hosts: all
   remote_user: spartan
   sudo: yes
-  roles:
-    - sudo
 
   tasks:
     - name: Add docker-engine yum repo
