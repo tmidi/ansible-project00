@@ -5,4 +5,4 @@
 
   tasks:
     - name: get Hostname
-      command: /bin/hostname
+      shell: /bin/hostname
