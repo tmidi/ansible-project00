@@ -1,0 +1,9 @@
+- hosts: all
+  become: yes
+  become_user: root
+  remote_user: spartan
+
+  tasks:
+    - name: get Hostname
+      command: /bin/hostname
+      register: yes
