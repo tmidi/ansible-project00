@@ -6,4 +6,3 @@
   tasks:
     - name: get Hostname
       command: /bin/hostname
-      register: yes
