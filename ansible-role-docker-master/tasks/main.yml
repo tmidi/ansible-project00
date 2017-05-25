@@ -4,7 +4,7 @@
 
   tasks:
     - name: Add docker-engine yum repo
-      template: src=docker.repo.j2 dest=/etc/yum.repos.d/docker.repo
+      template: src=templates/docker.repo.j2 dest=/etc/yum.repos.d/docker.repo
 
     - name: Change docker repo from RHEL to CentOS
       replace:
