@@ -1,7 +1,7 @@
 ---
 - hosts: all
-  remote_user: spartan
-  become: yes
+  #remote_user: spartan
+  become_user: spartan
 
   tasks:
     - name: Add docker-engine yum repo
