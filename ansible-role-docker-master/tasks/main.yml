@@ -1,25 +1,43 @@
 ---
-- name: Add docker-engine yum repo
-  template: src=docker.repo.j2 dest=/etc/yum.repos.d/docker.repo
+- hosts: all
+  remote_user: spartan
+  # become: true
+  # become_user: spartan
+  sudo: true
 
-- name: Change docker repo from RHEL to CentOS
-  replace:
-    dest: /etc/yum.repos.d/docker.repo
-    regexp: 'RedHat'
-    replace: 'centos'
-  when: "{{ ansible_distribution == 'RedHat' }}"
 
-- name: Install docker-engine and pip
-  yum: name="{{item}}" state=installed
-  with_items:
-    - docker-engine
-    - python-pip
+  tasks:
+    - name: Add docker yum repo
+      template: src=/etc/semaphore/repository_1/ansible-role-docker-master/templates/docker.repo.j2 dest=/etc/yum.repos.d/docker.repo
+      #become: true
+      #sudo: yes
 
-- name: Ensure docker-py is installed
-  pip: name=docker-py                  
+    - name: Change docker repo from RHEL to CentOS
+      replace:
+        dest: /etc/yum.repos.d/docker.repo
+        regexp: 'RedHat'
+        replace: 'centos'
+      when: "{{ ansible_distribution == 'RedHat' }}"
 
-- name: Start/enable docker service
-  service: name=docker enabled=yes state=started
+    - name: Install EPEL
+      yum: name="{{item}}" state=installed
+      with_items:
+        - epel-release
 
-- name: Create docker user
-  user: name=docker group=docker uid=991
+    - name: Install docker-engine and pip
+      yum: name="{{item}}" state=installed
+      with_items:
+        - docker
+        - python-pip
+
+    - name: Ensure docker-py and docker-compose are installed
+      pip: name={{item}}
+      with_items:
+        - docker-py
+        - docker-compose                  
+
+    - name: Start/enable docker service
+      service: name=docker enabled=yes state=started
+
+    - name: Create docker user
+      user: name=docker group=docker uid=991
