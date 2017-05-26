@@ -1,23 +1,36 @@
 ---
 - hosts: all
   remote_user: spartan
-  # become: true
-  # become_user: spartan
-  sudo: true
+  become: true
+  become_user: root
 
 
   tasks:
-    - name: Add docker yum repo
-      template: src=/etc/semaphore/repository_1/ansible-role-docker-master/templates/docker.repo.j2 dest=/etc/yum.repos.d/docker.repo
-      #become: true
-      #sudo: yes
+    # - name: delete docker repo
+    #   file:
+    #     path: "{{file}}"
+    #     state: absent
+    #   with_fileglob:
+    #     - /etc/yum.repos.d/docker_cc.repo
 
-    - name: Change docker repo from RHEL to CentOS
-      replace:
-        dest: /etc/yum.repos.d/docker.repo
-        regexp: 'RedHat'
-        replace: 'centos'
-      when: "{{ ansible_distribution == 'RedHat' }}"
+    - name: install Docker required packages
+      yum: name="{{item}}" state=installed
+      with_items:
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+    
+    # Handler showing how to clean yum metadata cache
+    - name: yum-clean-metadata
+      command: yum clean metadata
+      args:
+        warn: no
+
+    - name: disable docker repo
+      yum_repository:
+        name: docker_cc
+        state: absent
+      notify: yum-clean-metadata
 
     - name: Install EPEL
       yum: name="{{item}}" state=installed
@@ -40,4 +53,4 @@
       service: name=docker enabled=yes state=started
 
     - name: Create docker user
-      user: name=docker group=docker uid=991
+      user: name=docker group=dockerroot uid=991
