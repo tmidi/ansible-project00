@@ -7,9 +7,9 @@
 
 
   tasks:
-    - name: test install vim
-      yum: name=python3 state=installed
-      
+    - name: test install aide
+      yum: name=aide state=installed
+
     - name: Add docker yum repo
       template: src=/etc/semaphore/repository_1/ansible-role-docker-master/templates/docker.repo.j2 dest=/etc/yum.repos.d/docker.repo
       #become: true
