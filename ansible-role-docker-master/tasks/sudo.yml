@@ -1,0 +1,8 @@
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+  gather_facts: no
+  tasks:
+  - name: "sudo to root"
+    command: /usr/bin/whoami
