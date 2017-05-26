@@ -1,15 +1,16 @@
 ---
 - hosts: all
-  # remote_user: spartan
+  remote_user: spartan
   # become: true
   # become_user: spartan
+  sudo: true
 
 
   tasks:
     - name: Add docker yum repo
       template: src=/etc/semaphore/repository_1/ansible-role-docker-master/templates/docker.repo.j2 dest=/etc/yum.repos.d/docker.repo
       #become: true
-      sudo: yes
+      #sudo: yes
 
     - name: Change docker repo from RHEL to CentOS
       replace:
